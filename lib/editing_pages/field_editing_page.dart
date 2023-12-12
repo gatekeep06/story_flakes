@@ -11,15 +11,11 @@ class FieldEditingPage extends StatefulWidget {
 }
 
 class _FieldEditingPageState extends State<FieldEditingPage> {
-  late ElementField _elementField;
-  late String _name;
-  late String _description;
-
   @override
   Widget build(BuildContext context) {
-    _elementField = widget.elementField;
-    _name = _elementField.name;
-    _description = _elementField.description;
+    ElementField elementField = widget.elementField;
+    String name = elementField.name;
+    String description = elementField.description;
 
     return WillPopScope(
       onWillPop: () async {
@@ -32,8 +28,8 @@ class _FieldEditingPageState extends State<FieldEditingPage> {
           actions: [
             IconButton(
               onPressed: () {
-                _elementField.name = _name;
-                _elementField.description = _description;
+                elementField.name = name;
+                elementField.description = description;
                 Navigator.pop(context, true);
               },
               icon: const Icon(Icons.check_circle_outline),
@@ -56,9 +52,9 @@ class _FieldEditingPageState extends State<FieldEditingPage> {
                   decoration: const InputDecoration(
                     labelText: "Name",
                   ),
-                  initialValue: _name,
+                  initialValue: name,
                   onChanged: (string) {
-                    _name = string;
+                    name = string;
                   },
                 ),
                 const SizedBox(height: 40.0),
@@ -67,11 +63,11 @@ class _FieldEditingPageState extends State<FieldEditingPage> {
                     labelText: "Description",
                     border: OutlineInputBorder()
                   ),
-                  initialValue: _description,
+                  initialValue: description,
                   maxLines: null,
                   minLines: 20,
                   onChanged: (string) {
-                    _description = string;
+                    description = string;
                   },
                 )
               ],

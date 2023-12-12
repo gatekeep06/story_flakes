@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:story_flakes/data/element_field.dart';
 import 'package:story_flakes/data/project_element.dart';
 import 'package:story_flakes/editing_pages/field_editing_page.dart';
@@ -32,8 +35,11 @@ class _ProjectElementPageState extends State<ProjectElementPage> {
                   height: 240,
                   width: 240,
                   child: GestureDetector(
-                    onTap: () {
-                      projectElement.changeImage(this);
+                    onTap: () async {
+                      var file = await ImagePicker().pickImage(source: ImageSource.gallery);
+                      setState(() {
+                        projectElement.image = file != null ? File(file.path) : projectElement.image;
+                      });
                     },
                     child: CircleAvatar(
                       radius: 50,
@@ -54,6 +60,7 @@ class _ProjectElementPageState extends State<ProjectElementPage> {
                       title: const Text("Edit"),
                       content: TextField(
                         controller: nameEditingController,
+                        maxLines: null,
                         decoration: const InputDecoration(
                           labelText: 'Name',
                         ),
@@ -88,38 +95,61 @@ class _ProjectElementPageState extends State<ProjectElementPage> {
               itemCount: projectElement.fieldList.length,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(
-                  padding: const EdgeInsets.only(top: 10.0, left: 2.0, right: 2.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0)
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(projectElement.fieldList[index].name, style: TextStyle(fontSize: 18.0)),
-                            Expanded(
-                              child: Container(
-                                alignment: Alignment.topRight,
-                                child: IconButton(
-                                  onPressed: () {
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                        FieldEditingPage(elementField: projectElement.fieldList[index])))
-                                        .then((value) {
-                                          if (value) {
-                                            setState(() {});
-                                          }
-                                    });
-                                  },
-                                  icon: const Icon(Icons.edit),
-                                )
-                              )
-                            )
-                          ],
+                  padding: const EdgeInsets.only(top: 15.0, left: 20.0, right: 20.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                          FieldEditingPage(elementField: projectElement.fieldList[index])))
+                          .then((value) {
+                            if (value) {
+                              setState(() {});
+                            }
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                        Text(projectElement.fieldList[index].description)
-                      ],
+                        shadows: const [
+                          BoxShadow(
+                            color: Color(0x3F000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 0),
+                            spreadRadius: 0,
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            projectElement.fieldList[index].name,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Lato',
+                              fontWeight: FontWeight.w500,
+                              height: 0,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            projectElement.fieldList[index].description,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontFamily: 'Lato',
+                              fontWeight: FontWeight.w300,
+                              height: 0,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

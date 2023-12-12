@@ -1,23 +1,35 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:story_flakes/data/project_element.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:story_flakes/data/project.dart';
 
-class ProjectElementEditingPage extends StatefulWidget {
-  final ProjectElement projectElement;
+class ProjectEditingPage extends StatefulWidget {
+  final Project project;
 
-  const ProjectElementEditingPage({super.key, required this.projectElement});
+  const ProjectEditingPage({super.key, required this.project});
 
   @override
-  State<ProjectElementEditingPage> createState() => _ProjectElementEditingPageState();
+  State<ProjectEditingPage> createState() => _ProjectEditingPageState();
 }
 
-class _ProjectElementEditingPageState extends State<ProjectElementEditingPage> {
-  String? _name;
-  int? _selectedIndex;
+class _ProjectEditingPageState extends State<ProjectEditingPage> {
+  late Project project;
+  late String name;
+  late String description;
+  File? image;
+
+  @override
+  void initState() {
+    super.initState();
+    project = widget.project;
+    name = project.name;
+    description = project.description;
+    image = project.image;
+  }
 
   @override
   Widget build(BuildContext context) {
-    ProjectElement projectElement = widget.projectElement;
-
     return WillPopScope(
       onWillPop: () async {
         Navigator.pop(context, false);
@@ -25,11 +37,13 @@ class _ProjectElementEditingPageState extends State<ProjectElementEditingPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Project Element"),
+          title: const Text("Project editing"),
           actions: [
             IconButton(
               onPressed: () {
-                projectElement.name = _name != null ? _name! : "";
+                project.name = name;
+                project.description = description;
+                project.image = image;
                 Navigator.pop(context, true);
               },
               icon: const Icon(Icons.check_circle_outline),
@@ -52,12 +66,15 @@ class _ProjectElementEditingPageState extends State<ProjectElementEditingPage> {
                   height: 240,
                   width: 240,
                   child: GestureDetector(
-                    onTap: () {
-                      projectElement.changeImage(this);
+                    onTap: () async {
+                      var file = await ImagePicker().pickImage(source: ImageSource.gallery);
+                      setState(() {
+                        image = file != null ? File(file.path) : image;
+                      });
                     },
                     child: CircleAvatar(
                       radius: 50,
-                      backgroundImage: projectElement.image != null ? FileImage(projectElement.image!) : null,
+                      backgroundImage: image != null ? FileImage(image!) : null,
                     ),
                   ),
                 ),
@@ -69,7 +86,18 @@ class _ProjectElementEditingPageState extends State<ProjectElementEditingPage> {
                     labelText: 'Name',
                   ),
                   onChanged: (string) {
-                    _name = string;
+                    name = string;
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Description',
+                  ),
+                  onChanged: (string) {
+                    description = string;
                   },
                 ),
               ),
@@ -86,9 +114,8 @@ class _ProjectElementEditingPageState extends State<ProjectElementEditingPage> {
               // )
             ],
           ),
-        ),
+        )
       ),
     );
   }
 }
-

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:story_flakes/data/project.dart';
-import 'package:story_flakes/data/project_map.dart';
+import 'package:story_flakes/data/project_list.dart';
+import 'package:story_flakes/editing_pages/project_editing_page.dart';
 import 'package:story_flakes/project_home_page.dart';
 
 class Projects extends StatefulWidget {
@@ -12,12 +13,12 @@ class Projects extends StatefulWidget {
 
 class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  late ProjectMap _projectMap;
+  late ProjectList _projectList;
 
   @override
   void initState() {
     super.initState();
-    _projectMap = ProjectMap();
+    _projectList = ProjectList();
     _tabController = TabController(length: 2, vsync: this);
   }
 
@@ -51,89 +52,129 @@ class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin
       body: TabBarView(
           controller: _tabController,
           children: [
-            ListView.builder(
-              itemCount: _projectMap.getMap().length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                if (index == _projectMap.getMap().length) {
-                  return GestureDetector(
-                    onTap: () {
-                      print("object");
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          style: BorderStyle.solid,
-                          color: Colors.grey
-                        ),
-                        borderRadius: BorderRadius.circular(15.0)
-                      ),
-                      alignment: Alignment.center,
-                      child: const Column(
-                        children: [
-                          Text("+", style: TextStyle(color: Colors.blueGrey, fontSize: 64)),
-                          Text("Add new project", style: TextStyle(color: Colors.grey, fontSize: 20))
-                        ],
-                      ),
-                    ),
-                  );
-                }
-                Project project = _projectMap.getMap()[index]!;
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectHomePage(project: project)));
-                  },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 100.0,
-                            child: project.getIcon(),
+            SingleChildScrollView(
+              child: Column(
+                  children: [
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _projectList.list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Project project = _projectList.list[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectHomePage(project: project)));
+                          },
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 50,
+                                    backgroundImage: project.image != null ? FileImage(project.image!) : null,
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          project.name,
+                                          style: const TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        Text(
+                                          project.description,
+                                          style: const TextStyle(fontSize: 16.0),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Align(
+                                    alignment: Alignment.topCenter,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        IconButton(
+                                          icon: const Icon(Icons.ac_unit),
+                                          onPressed: () {},
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.cloud),
+                                          onPressed: () {},
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  project.name,
-                                  style: const TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
+                        );
+                      },
+                    ),
+                    GestureDetector(
+                        onTap: () {
+                          Project newProject = Project();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectEditingPage(project: newProject)))
+                              .then((value) {
+                                if (value) {
+                                  setState(() {
+                                    _projectList.list.add(newProject);
+                                  });
+                                }
+                          });
+                        },
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(vertical: 3),
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(width: 1),
+                                    borderRadius: BorderRadius.circular(15),
                                   ),
                                 ),
-                                Text(
-                                  project.description,
-                                  style: const TextStyle(fontSize: 16.0),
+                                child: const Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '+',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 48,
+                                        fontFamily: 'Lato',
+                                        fontWeight: FontWeight.w800,
+                                        height: 0,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Add new Project',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 14,
+                                        fontFamily: 'Lato',
+                                        fontWeight: FontWeight.w400,
+                                        height: 0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.ac_unit),
-                                  onPressed: () {},
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.cloud),
-                                  onPressed: () {},
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
+                              ),
+                            )
+                          ],
+                        )
+                    )
+                  ]
+              ),
             ),
             Center(
               child: Text('Tab 2'),

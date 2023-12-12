@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:story_flakes/data/project_element.dart';
-import 'package:story_flakes/editing_pages/project_element_editing_page.dart';
+import 'package:story_flakes/editing_pages/element_editing_page.dart';
 import 'package:story_flakes/project_element_page.dart';
 
 import 'data/project.dart';
