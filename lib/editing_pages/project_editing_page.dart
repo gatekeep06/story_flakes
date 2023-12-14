@@ -37,7 +37,7 @@ class _ProjectEditingPageState extends State<ProjectEditingPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Project editing"),
+          title: const Text("Project editing", style: TextStyle(),),
           actions: [
             IconButton(
               onPressed: () {
@@ -57,12 +57,12 @@ class _ProjectEditingPageState extends State<ProjectEditingPage> {
           ],
         ),
         body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Align(
-                alignment: Alignment.topCenter,
-                child: SizedBox(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 30.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
                   height: 240,
                   width: 240,
                   child: GestureDetector(
@@ -78,41 +78,30 @@ class _ProjectEditingPageState extends State<ProjectEditingPage> {
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
-                child: TextFormField(
+                TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Name',
+                    labelText: "Name",
                   ),
+                  initialValue: name,
                   onChanged: (string) {
                     name = string;
                   },
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
-                child: TextFormField(
+                const SizedBox(height: 40.0),
+                TextFormField(
                   decoration: const InputDecoration(
-                    labelText: 'Description',
+                      labelText: "Description",
+                      border: OutlineInputBorder()
                   ),
+                  initialValue: description,
+                  maxLines: null,
+                  minLines: 6,
                   onChanged: (string) {
                     description = string;
                   },
-                ),
-              ),
-              // ListView.builder(
-              //   itemCount: 0,
-              //   itemBuilder: (BuildContext context, int index) {
-              //     return Padding(
-              //       padding: const EdgeInsets.only(top: 10.0, left: 2.0, right: 2.0),
-              //       child: Card(
-              //
-              //       ),
-              //     );
-              //   },
-              // )
-            ],
+                )
+              ],
+            ),
           ),
         )
       ),

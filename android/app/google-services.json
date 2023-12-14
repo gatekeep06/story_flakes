@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "484684647105",
+    "firebase_url": "https://stroryflakes-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "stroryflakes",
     "storage_bucket": "stroryflakes.appspot.com"
   },

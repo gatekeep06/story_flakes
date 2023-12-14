@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:story_flakes/data/project.dart';
 import 'package:story_flakes/data/project_list.dart';
@@ -15,6 +16,8 @@ class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin
   late TabController _tabController;
   late ProjectList _projectList;
 
+  final database = FirebaseDatabase.instance.reference();
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +33,8 @@ class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    final ref = database.child("projects");
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -63,7 +68,10 @@ class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin
                         Project project = _projectList.list[index];
                         return GestureDetector(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectHomePage(project: project)));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectHomePage(project: project)))
+                                .then((value) async {
+                                  await ref.push().set(project);
+                            });
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(

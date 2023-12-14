@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:story_flakes/data/branch.dart';
 import 'package:story_flakes/data/project_element.dart';
 import 'package:story_flakes/editing_pages/element_editing_page.dart';
 import 'package:story_flakes/project_element_page.dart';
 
-import 'data/project.dart';
-
 class ProjectBranchPage extends StatefulWidget {
-  final Project project;
-  final String branch;
+  final Branch branch;
 
-  const ProjectBranchPage({super.key, required this.project, required this.branch});
+  const ProjectBranchPage({super.key, required this.branch});
 
   @override
   State<ProjectBranchPage> createState() => _ProjectBranchPageState();
@@ -18,10 +16,10 @@ class ProjectBranchPage extends StatefulWidget {
 class _ProjectBranchPageState extends State<ProjectBranchPage> {
   @override
   Widget build(BuildContext context) {
-    Project project = widget.project;
-    List<ProjectElement> projectElements = project.projectElements[widget.branch]!;
+    List<ProjectElement> projectElements = widget.branch.projectElements;
+
     return Scaffold(
-      appBar: AppBar(title: Text(widget.branch)),
+      appBar: AppBar(title: Text(widget.branch.name)),
       body: ListView.builder(
         itemCount: projectElements.length,
         itemBuilder: (BuildContext context, int index) {
@@ -29,6 +27,7 @@ class _ProjectBranchPageState extends State<ProjectBranchPage> {
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectElementPage(projectElement: projectElements[index])))
                   .then((value) {
+                    widget.branch.addToRecentlyEdited(index);
                     setState(() {});
               });
             },
@@ -75,12 +74,13 @@ class _ProjectBranchPageState extends State<ProjectBranchPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          ProjectElement newProjectElement = ProjectElement(name: "3132");
+          ProjectElement newProjectElement = ProjectElement();
           Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectElementEditingPage(projectElement: newProjectElement)))
               .then((value) {
             if (value) {
               setState(() {
                 projectElements.add(newProjectElement);
+                widget.branch.addToRecentlyEdited(projectElements.length - 1);
               });
             }
           });

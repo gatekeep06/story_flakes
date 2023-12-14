@@ -52,6 +52,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '484684647105',
     projectId: 'stroryflakes',
     authDomain: 'stroryflakes.firebaseapp.com',
+    databaseURL: 'https://stroryflakes-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'stroryflakes.appspot.com',
     measurementId: 'G-QKL9V0R31X',
   );
@@ -61,6 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:484684647105:android:90a5a4b85630a63494a240',
     messagingSenderId: '484684647105',
     projectId: 'stroryflakes',
+    databaseURL: 'https://stroryflakes-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'stroryflakes.appspot.com',
   );
 
@@ -69,6 +71,7 @@ class DefaultFirebaseOptions {
     appId: '1:484684647105:ios:1ac3d953b56eaa1894a240',
     messagingSenderId: '484684647105',
     projectId: 'stroryflakes',
+    databaseURL: 'https://stroryflakes-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'stroryflakes.appspot.com',
     iosBundleId: 'com.metacontent.storyFlakes',
   );

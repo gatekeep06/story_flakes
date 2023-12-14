@@ -80,6 +80,7 @@ class _ProjectElementEditingPageState extends State<ProjectElementEditingPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 60.0),
                 child: TextFormField(
+                  initialValue: name,
                   decoration: const InputDecoration(
                     labelText: 'Name',
                   ),
