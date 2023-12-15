@@ -16,8 +16,6 @@ class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin
   late TabController _tabController;
   late ProjectList _projectList;
 
-  final database = FirebaseDatabase.instance.reference();
-
   @override
   void initState() {
     super.initState();
@@ -31,10 +29,15 @@ class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin
     super.dispose();
   }
 
+  openProject(BuildContext context, Project project) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectHomePage(project: project)))
+        .then((value) async {
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final ref = database.child("projects");
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -67,11 +70,38 @@ class _ProjectsState extends State<Projects> with SingleTickerProviderStateMixin
                       itemBuilder: (BuildContext context, int index) {
                         Project project = _projectList.list[index];
                         return GestureDetector(
+                          onLongPress: () {
+                            showDialog(context: context, builder: (context) => AlertDialog(
+                              actions: [
+                                PopupMenuItem(
+                                  onTap: () {
+                                    openProject(context, project);
+                                  },
+                                  child: const Text("Open"),
+                                ),
+                                PopupMenuItem(
+                                  onTap: () {
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                        ProjectEditingPage(project: project)))
+                                        .then((value) {
+                                          if (value) {
+                                            setState(() {});
+                                          }
+                                    });
+                                  },
+                                  child: Text("Settings"),
+                                ),
+                                PopupMenuItem(
+                                  child: Text("Recolor"),
+                                ),
+                                PopupMenuItem(
+                                  child: Text("Delete"),
+                                ),
+                              ],
+                            ));
+                          },
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => ProjectHomePage(project: project)))
-                                .then((value) async {
-                                  await ref.push().set(project);
-                            });
+                            openProject(context, project);
                           },
                           child: Card(
                             shape: RoundedRectangleBorder(

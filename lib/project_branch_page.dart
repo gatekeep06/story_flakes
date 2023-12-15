@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:story_flakes/data/branch.dart';
 import 'package:story_flakes/data/project_element.dart';
+import 'package:story_flakes/editing_pages/connection_editing_page.dart';
 import 'package:story_flakes/editing_pages/element_editing_page.dart';
 import 'package:story_flakes/project_element_page.dart';
 
@@ -57,14 +58,15 @@ class _ProjectBranchPageState extends State<ProjectBranchPage> {
                       ),
                     ),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(projectElements[index].name, style: const TextStyle(fontSize: 24.0)),
-                          Text(projectElements[index].getTagString())
-                        ],
-                      ),
-                    )
+                      child: Text(projectElements[index].name, style: const TextStyle(fontSize: 24.0)),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.linear_scale_rounded),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                            ConnectionEditingPage(branch: widget.branch, index: index)));
+                      },
+                    ),
                   ],
                 ),
               ),

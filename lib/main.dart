@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:story_flakes/auth_page.dart';
+import 'package:story_flakes/connection_check_page.dart';
 import 'dart:io' show Platform;
 import 'package:story_flakes/mobile_home_page.dart';
 
@@ -25,11 +27,10 @@ class StoryFlakesApp extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: MobileHomePage()
+      home: AuthPage(),
     );
   }
 

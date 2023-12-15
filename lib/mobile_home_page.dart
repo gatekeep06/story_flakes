@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:story_flakes/connection_check_page.dart';
 import 'package:story_flakes/inspiration.dart';
 import 'package:story_flakes/notifications.dart';
 import 'package:story_flakes/projects.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MobileHomePage extends StatefulWidget {
   const MobileHomePage({super.key});
@@ -14,9 +16,9 @@ class _MobileHomePageState extends State<MobileHomePage> {
   int _selectedIndex = 1;
 
   static const List<Widget> _children = [
-    Inspiration(),
-    Projects(),
-    Notifications()
+    ConnectionCheckPage(page: Inspiration(), hideAppBar: true),
+    ConnectionCheckPage(page: Projects(), hideAppBar: true),
+    ConnectionCheckPage(page: Notifications(), hideAppBar: true)
   ];
 
   void _onItemTapped(int index) {
@@ -27,18 +29,45 @@ class _MobileHomePageState extends State<MobileHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text("$_selectedIndex"),
-        actions: [
-          PopupMenuButton(
-            itemBuilder: (buildContext) {
-                return List.empty();
-              },
-            icon: const Icon(Icons.menu),
-          )
-        ],
+      appBar: AppBar(title: Text("$_selectedIndex")),
+      drawer: Drawer(
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(20.0, 10.0, 5.0, 10.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // DrawerHeader(
+                //   child: ,
+                // ),
+                ListView(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    ListTile(
+                      title: Text("Profile"),
+                    ),
+                    ListTile(
+                      title: const Text("Archive"),
+                    ),
+                    ListTile(
+                      title: const Text("Subscription"),
+                    ),
+                    ListTile(
+                      title: const Text("Settings"),
+                    ),
+                    ListTile(
+                      title: const Text("Log Out"),
+                      onTap: () {
+                        FirebaseAuth.instance.signOut();
+                      },
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
       ),
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
