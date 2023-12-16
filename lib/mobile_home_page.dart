@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:story_flakes/connection_check_page.dart';
 import 'package:story_flakes/inspiration.dart';
 import 'package:story_flakes/notifications.dart';
+import 'package:story_flakes/profile_page.dart';
 import 'package:story_flakes/projects.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -37,14 +38,39 @@ class _MobileHomePageState extends State<MobileHomePage> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // DrawerHeader(
-                //   child: ,
-                // ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()))
+                        .then((value) {
+                      setState(() {});
+                    });
+                  },
+                  child: DrawerHeader(
+                      child: Center(
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 50.0,
+                              backgroundImage: FirebaseAuth.instance.currentUser!.photoURL == null ? null : NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(FirebaseAuth.instance.currentUser!.displayName!, style: const TextStyle(fontSize: 16.0)),
+                          ],
+                        ),
+                      )
+                  ),
+                ),
                 ListView(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
                   children: [
                     ListTile(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()))
+                            .then((value) {
+                              setState(() {});
+                        });
+                      },
                       title: Text("Profile"),
                     ),
                     ListTile(

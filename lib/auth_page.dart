@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:story_flakes/login_page.dart';
+import 'package:story_flakes/sign_in_page.dart';
 import 'package:story_flakes/mobile_home_page.dart';
 
 class AuthPage extends StatelessWidget {
@@ -10,13 +10,14 @@ class AuthPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.userChanges(),
+        stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (FirebaseAuth.instance.currentUser != null) {
+            FirebaseAuth.instance.currentUser!.reload();
             return const MobileHomePage();
           }
           else {
-            return const LoginPage();
+            return const SignInPage();
           }
         },
       ),
