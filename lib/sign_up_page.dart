@@ -52,6 +52,13 @@ class _SignUpPageState extends State<SignUpPage> {
         email: emailEditingController.text,
         password: passwordEditingController.text,
       );
+      await FirebaseDatabase.instance.ref().child("users/${FirebaseAuth.instance.currentUser!.uid}").set(
+        {
+          "is_admin": false,
+          "projects": [],
+          "co-authoring": []
+        }
+      );
       await FirebaseAuth.instance.currentUser!.updateDisplayName(loginEditingController.text);
       Navigator.pop(context);
     }

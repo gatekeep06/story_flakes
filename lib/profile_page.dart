@@ -28,6 +28,9 @@ class _ProfilePageState extends State<ProfilePage> {
                     XFile? xFile = await ImagePicker().pickImage(source: ImageSource.gallery);
                     if (xFile != null) {
                       String name = xFile.name;
+                      if (FirebaseAuth.instance.currentUser!.photoURL != null) {
+                        await FirebaseStorage.instance.refFromURL(FirebaseAuth.instance.currentUser!.photoURL!).delete();
+                      }
                       await FirebaseStorage.instance.ref().child("images/user_images/${FirebaseAuth.instance.currentUser!.uid}/avatar/$name")
                           .putFile(File(xFile.path));
                       await FirebaseAuth.instance.currentUser!.updatePhotoURL(await FirebaseStorage.instance.ref()

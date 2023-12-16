@@ -54,7 +54,7 @@ class _MobileHomePageState extends State<MobileHomePage> {
                               backgroundImage: FirebaseAuth.instance.currentUser!.photoURL == null ? null : NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
                             ),
                             const SizedBox(height: 10.0),
-                            Text(FirebaseAuth.instance.currentUser!.displayName!, style: const TextStyle(fontSize: 16.0)),
+                            FirebaseAuth.instance.currentUser!.displayName == null ? const Text("") : Text(FirebaseAuth.instance.currentUser!.displayName!, style: const TextStyle(fontSize: 16.0)),
                           ],
                         ),
                       )
